@@ -16,6 +16,9 @@ DigitalInputPin leftBumper(FEHIO::P3_7);
 DigitalEncoder rightEncoder(FEHIO::P1_7);
 DigitalEncoder leftEncoder(FEHIO::P2_0);
 
+//initialize cds
+AnalogInputPin cds(FEHIO::P1_6);
+
 
 int main(void)
 {
@@ -35,6 +38,13 @@ int main(void)
     LCD.DrawHorizontalLine(120,0,320);
     float x, y;
 
+    //testing the cds cell
+    while(rightBumper.Value()){
+
+        LCD.WriteLine(cds.Value());
+        LCD.Clear(BLUE);
+    }
+
     while(true){
 
 
@@ -45,16 +55,16 @@ int main(void)
        if(!rightBumper.Value()){
          LCD.Clear( FEHLCD::Blue);
          Sleep(1.0);
-         LCD.WriteLine("this should drive");
-         ctrl.drive(1.5,50);
+         LCD.WriteLine("turn right");
+         ctrl.turn(35,90);
        }
 
 
        if(!leftBumper.Value()){
            LCD.Clear( FEHLCD::Red);
            Sleep(1.0);
-           LCD.WriteLine("this should drive a set distance");
-           ctrl.driveDistance(6.0,35);
+           LCD.WriteLine("turn left");
+           ctrl.turn(35,90);
        }
 
     }

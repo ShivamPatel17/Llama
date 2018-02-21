@@ -14,6 +14,7 @@ class Controls
         Controls();
         int drive(double, int);
         int driveDistance(double, int);
+        int turn(int, int);
 
     private:
 

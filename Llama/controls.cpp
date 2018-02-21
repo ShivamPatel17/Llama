@@ -104,18 +104,26 @@ int Controls::driveDistance(double distance, int power){
 }
 int Controls::turn(int motorPower, int degrees)
 {
+  //clean this degrees bs up late
+  int counts = (degrees/180.0)*440;
+
+  if(counts<0){
+      counts =counts*-1;
+  }
+
+
   if(degrees>0)
   {
       while(leftEncoder.Counts()+rightEncoder.Counts()<counts){
-          rightMotor.setPercent(motorPower);
-          leftMotor.setPercent(-motorPower);
+          rightMotor.SetPercent(motorPower);
+          leftMotor.SetPercent(-motorPower);
       }
   }
   else
   {
       while(leftEncoder.Counts()+rightEncoder.Counts()<counts){
-          rightMotor.setPercent(-motorPower);
-          leftMotor.setPercent(motorPower);
+          rightMotor.SetPercent(-motorPower);
+          leftMotor.SetPercent(motorPower);
       }
   }
 }
