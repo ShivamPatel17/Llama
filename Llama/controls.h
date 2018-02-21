@@ -1,11 +1,22 @@
+#include <fehproteusfirmware/Libraries/FEHIO.h>
+#include <fehproteusfirmware/Libraries/FEHLCD.h>
+#include <fehproteusfirmware/Libraries/FEHMotor.h>
+#include <fehproteusfirmware/Libraries/FEHUtility.h>
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
+using namespace std;
 
-class controls
+
+class Controls
 {
-public:
-    controls();
+    public:
+        Controls();
+        int drive(double, int);
+        int driveDistance(double, int);
+
+    private:
+
 };
 
 #endif // CONTROLS_H
