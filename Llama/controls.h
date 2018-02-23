@@ -15,6 +15,7 @@ class Controls
         int drive(double, int);
         int driveDistance(double, int);
         int turn(int, int);
+        int straightUntilWall(int);
 
     private:
 
