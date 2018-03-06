@@ -4,6 +4,8 @@
 #include <FEHUtility.h>
 #include "controls.h">
 #include "performance.h"
+#include "proteusinterface.h"
+#include <FEHServo.h>
 
 
 //initialize motors
@@ -21,16 +23,28 @@ DigitalEncoder leftEncoder(FEHIO::P2_4);
 //initialize cds
 AnalogInputPin cds(FEHIO::P2_1);
 
+//initialze servos! :) 2/28/2018
+FEHServo wrenchServo(FEHServo::Servo0);
+FEHServo fuelServo(FEHServo::Servo7);
+
+//constant
+int superConstant;
+double distanceConstant;
+
+//idk why i need this
+Controls ctrl(680,0.95);
 
 int main(void)
 {
+
     //initialize control class and performance
-    Controls ctrl;
+    Controls ctrl(680,0.95);
     Performance perf;
+    ProteusInterface pi;
+    pi.homepage();
 
 
-
-
+/*
     //clear screen
     LCD.Clear( FEHLCD::Green);
     LCD.SetFontColor( FEHLCD::White );
@@ -56,6 +70,7 @@ int main(void)
        LCD.WriteLine("RESET!!");
 
    }
+   */
 
 
 
