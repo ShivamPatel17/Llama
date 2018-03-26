@@ -4,6 +4,7 @@
 #include <FEHUtility.h>
 #include "controls.h">
 #include "performance.h"
+#include <FEHRPS.h>
 
 
 extern Controls ctrl;
@@ -32,11 +33,11 @@ void ProteusInterface::homepage(){
     LCD.DrawRectangle(0,123,180,40);
     LCD.DrawRectangle(0,164,180,40);
 
-    LCD.WriteAt("Turn Config",2,2);
-    LCD.WriteAt("Drive Config",2,42);
-    LCD.WriteAt("clockwise",2,82);
-    LCD.WriteAt("counterclock",2,123);
-    LCD.WriteAt("FinalComp",2,164);
+    LCD.WriteAt("RPS",2,2);
+    LCD.WriteAt("Turn left",2,42);
+    LCD.WriteAt("Set Wrench Down",2,82);
+    LCD.WriteAt("Turn right",2,123);
+    LCD.WriteAt("Perf4",2,164);
 
     //dummys
     float x,y;
@@ -44,19 +45,29 @@ void ProteusInterface::homepage(){
     while(true){
         while(LCD.Touch(&x,&y)){
             if((x>0&&x<80)&&(y>0&&y<40)){
-                configureTurn();
+                RPS.InitializeTouchMenu();
+                while(true){
+                    LCD.WriteLine("X: ");
+                    LCD.Write(RPS.X());
+                    LCD.WriteLine("Y: ");
+                    LCD.Write(RPS.Y());
+                    LCD.WriteLine("head: ");
+                    LCD.Write(RPS.Heading());
+                    Sleep(1.0);
+                    LCD.Clear(BLACK);
+                }
             }
             if((x>0&&x<80)&&(y>40&&y<80)){
-                configureDrive();
+                ctrl.turnCrank(1);
             }
             if((x>0&&x<80)&&(y>80&&y<120)){
-                ctrl.turnCrank(1);
+                ctrl.setWrenchDegree(10,5);
             }
             if((x>0&&x<80)&&(y>123&&y<164)){
                 ctrl.turnCrank(2);
             }
             if((x>0&&x<80)&&(y>164&&y<204)){
-                perf.finalTest();
+                perf.test3();
             }
 
         }

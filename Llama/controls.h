@@ -14,7 +14,7 @@ class Controls
         Controls(int, double);
         int drive(double, int);
         int driveDistance(double, int);
-        int turn(int, int);
+        int turn(float, int);
         int straightUntilWall(int);
         void setSuperConstant(int);
         int getSuperConstant();
@@ -26,13 +26,17 @@ class Controls
         int controlPanel(int);
         int turnCrank(int);
         int initializeCrank(int);
-        void setWrenchDegree(int);
+        int startMotors(int);
+        int stopMotors();
+        void setWrenchDegree(int,int);
+        int followLine(float);
         //rps functions below
         void checkYPlus(float);
         void checkYMinus(float);
         void checkXPlus(float);
         void checkXMinus(float);
-        void checkHeading(float);
+        void checkHeading(float,float,float);
+        void XYRPS(float,float, int);
 
     private:
 

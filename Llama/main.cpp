@@ -6,6 +6,7 @@
 #include "performance.h"
 #include "proteusinterface.h"
 #include <FEHServo.h>
+#include <FEHSD.h>
 
 
 //initialize motors
@@ -31,47 +32,23 @@ FEHServo fuelServo(FEHServo::Servo7);
 int superConstant;
 double distanceConstant;
 
+//optosensor
+AnalogInputPin opto(FEHIO::P3_0);
+
 //idk why i need this
 Controls ctrl(680,0.95);
 
 int main(void)
 {
-
+    /*
+    while(true){
+        LCD.WriteLine(cds.Value());
+        Sleep(0.5);
+        LCD.Clear(BLACK);
+    }*/
     //initialize control class and performance
     Controls ctrl(680,0.95);
     Performance perf;
     ProteusInterface pi;
     pi.homepage();
-
-
-/*
-    //clear screen
-    LCD.Clear( FEHLCD::Green);
-    LCD.SetFontColor( FEHLCD::White );
-
-    //wait for cds to pick up some light then start the performance test
-   while(true){
-
-       while(rightBumper.Value() || leftBumper.Value()){
-           LCD.WriteLine(cds.Value());
-           Sleep(1.0);
-           LCD.Clear(BLACK);
-       }
-       //waiting for either switch to be pressed
-       while(rightBumper.Value()&& leftBumper.Value()){}
-
-       LCD.Clear(PINK);
-       Sleep(1.0);
-
-       //START! :)
-       while(cds.Value()>1.2){}
-       perf.test1();
-       Sleep(5.0);
-       LCD.WriteLine("RESET!!");
-
-   }
-   */
-
-
-
 }
