@@ -4,6 +4,7 @@
 #include <FEHSD.h>
 #include "fehproteusfirmware/Libraries/FEHRPS.h"
 
+
 Performance::Performance()
 {
 
@@ -14,16 +15,20 @@ void Performance::fuelCrank(){
 
 //test 3 is basically the final run//test 4 also//final run
 void Performance::test3(){
+
     ProteusInterface pi;
     Controls ctrl(680,0.95);
 
+    float colorX = 25.7;
+    float colorY=20.1;
     ctrl.setWrenchDegree(149,10);
-
+//hello shivam this is your robot speaking to you
+    //Thank you for coding me gently <3
     RPS.InitializeTouchMenu();
 
     LCD.Clear(PINK);
 
-    LCD.WriteLine("Wish me luck!");
+    LCD.WriteLine("Wish me luck! ;)");
 
 
     //waits to read a color
@@ -35,16 +40,16 @@ void Performance::test3(){
     ctrl.driveDistance(14.8,25);
 
 
-    ctrl.turn(89,25);
+    ctrl.turn(90,25);
 
 
-    ctrl.setWrenchDegree(10,2);
+    ctrl.setWrenchDegree(5,2);
 
 
-    ctrl.checkXMinus(10.5);
-    ctrl.checkHeading(180,1.5,0.4);
+    ctrl.driveDistance(2.3,25);
+    ctrl.checkHeading(178.5,1.5,0.4,30);
 
-    ctrl.followLine(2.5);
+    ctrl.followLine(2.8);
 
 
 
@@ -52,6 +57,8 @@ void Performance::test3(){
     ctrl.setWrenchDegree(105,5);
 
     ctrl.driveDistance(3,-25);
+
+    //ctrl.retry();
 
     ctrl.turn(-45,25);
 
@@ -65,31 +72,30 @@ void Performance::test3(){
     ctrl.driveDistance(2.0,-35);
 
     //turn to flick swit
-    ctrl.turn(-33,35);
+    ctrl.turn(-31,35);
 
     //turn back
     ctrl.turn(20,35);
 
     //straight until wall
-    ctrl.straightUntilWall(25);
+    ctrl.straightUntilWall(36);
 
     //back up and turn
     ctrl.driveDistance(1.0,-25);
-    Sleep(0.5);
+    Sleep(0.1);
     ctrl.turn(5,25);
 
     //back up like 14 inches
     ctrl.driveDistance(12.0,-35);
 
     Sleep(0.5);
+    LCD.Clear(WHITE);
 
     //turnn left
-    ctrl.turn(-90,35);
-    ctrl.checkHeading(0,2,1);
+    ctrl.turn(-85,35);
+    ctrl.checkHeading(0,2,0.5,30);
     ctrl.driveDistance(12.0,35);
-    ctrl.XYRPS(25.7,20,0);
-
-    ctrl.driveUntilLight(20);
+    ctrl.XYRPS(colorX,colorY,0);
 
     //determinelight color
     int color = ctrl.cdsColor();
@@ -99,9 +105,15 @@ void Performance::test3(){
     else{
         LCD.Clear(RED);
     }
-    ctrl.XYRPS(RPS.X()+1,RPS.Y(),5);
-    ctrl.checkHeading(0,2,1);
-    ctrl.straightUntilWall(25);
+
+    if(RPS.Heading()>300){
+        ctrl.turn(-1*(360-RPS.Heading()),20);
+    }
+    else{
+        ctrl.turn(RPS.Heading(),20);
+    }
+    ctrl.checkHeading(0,2,1,30);
+    ctrl.straightUntilWall(35);
     ctrl.driveDistance(5.0,-25);
     ctrl.turn(-40,25);
     ctrl.driveDistance(5.0,25);
@@ -113,42 +125,46 @@ void Performance::test3(){
     ctrl.driveDistance(1.0,-25);
     ctrl.turn(-90,25);
     ctrl.straightUntilWall(25);
-    ctrl.driveDistance(0.5,-25);
-    ctrl.turn(-83,25);
-    ctrl.checkHeading(80.0,0.8,0.5);
+    ctrl.driveDistance(0.15,-25);
+    ctrl.turn(-80,25);
+    ctrl.checkHeading(77.0,0.8,0.5,30);
 
-    ctrl.driveDistance(19.0,40);
+    ctrl.driveDistance(22.0,40);
     Sleep(1.0);
-    ctrl.checkYPlus(44.0);
 
-    ctrl.turn(-40,25);
+    ctrl.turn(-35,25);
+    ctrl.initializeCrank(RPS.FuelType());
+    ctrl.XYRPS(18.7,56.0,0);
+    ctrl.checkHeading(133,2,1,30);
+    ctrl.driveDistance(5.0,20);
+
+    bool linefound = ctrl.sweep(3.0);
+    ctrl.setWrenchDegree(45,2);
+    if(!linefound){
+        //do something if the line isn't found
+    }
+    ctrl.followWrenchLine(5.0);
+    /*before line following
     ctrl.XYRPS(22.2,52,0);
     ctrl.checkHeading(135,1.4,0.9);
-    ctrl.XYRPS(15.7,56.8,0);
+    ctrl.XYRPS(16.2,56.0,0);
     ctrl.checkHeading(135,0.8,0.8);
-
-    ctrl.driveDistance(5.0,25);
-    ctrl.setWrenchDegree(45,2);
+    */
 
 
     ctrl.drive(1.5,35);
-    ctrl.setWrenchDegree(10,5);
+    ctrl.setWrenchDegree(5,5);
     ctrl.driveDistance(10.0,-35);
-    ctrl.turn(-85,25);
-    ctrl.XYRPS(20.2,58.9,3);
-    SD.OpenLog();
-    SD.Printf("X: %f Y: %f", RPS.X(),RPS.Y());
+    ctrl.turn(-93,25);
+    ctrl.XYRPS(20.2,58.9,3); 
     ctrl.XYRPS(24,62.0,3);
-     SD.Printf("X: %f Y: %f", RPS.X(),RPS.Y());
-    SD.CloseLog();
-    ctrl.initializeCrank(RPS.FuelType());
     ctrl.setWrenchDegree(150,0);
-
-    //x:25.4 y:63.8
-    ctrl.checkHeading(225,1,0.5);
+    LCD.Clear(RED);
+    ctrl.checkHeading(225.0,1.0,0.5,45);
+    Sleep(0.1);
+    //maybe crank it up
     ctrl.startMotors(-30);
-    Sleep(0.2);
-
+    Sleep(1);
 
     ctrl.turnCrank(RPS.FuelType());
     Sleep(1.7);
@@ -157,16 +173,18 @@ void Performance::test3(){
     Sleep(0.2);
     ctrl.driveDistance(14.0,40);
     ctrl.turn(-90,35);
-    ctrl.checkHeading(315,1,0.7);
-    ctrl.driveDistance(15.2,35);
-    ctrl.turn(45,25);
-    ctrl.checkHeading(273,3,0.7);
-    ctrl.driveDistance(22.0,40);
-    ctrl.turn(95,35);
-    ctrl.checkHeading(180,3,1.2);
+    ctrl.checkHeading(315,1,0.7,30);
+    ctrl.driveDistanceUntilBump(20.8,35);
+    ctrl.turn(50,25);
+    ctrl.checkHeading(273,3,0.7,30);
+    ctrl.checkYMinus(19.0);
+
+    ctrl.turn(90,35);
+    ctrl.checkHeading(181,2,0.7,30);
     ctrl.driveDistance(9.0,35);
-    ctrl.turn(87,35);
-    ctrl.driveDistance(10.0,25);
+    ctrl.turn(90,35);
+    ctrl.checkHeading(90,2.0,1.0,30);
+    ctrl.driveDistance(10.0,40);
 
 
 

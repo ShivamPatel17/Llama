@@ -35,17 +35,14 @@ double distanceConstant;
 //optosensor
 AnalogInputPin opto(FEHIO::P3_0);
 
+//wrench bump
+DigitalInputPin wrenchBump(FEHIO::P1_0);
+
 //idk why i need this
 Controls ctrl(680,0.95);
 
 int main(void)
 {
-    /*
-    while(true){
-        LCD.WriteLine(cds.Value());
-        Sleep(0.5);
-        LCD.Clear(BLACK);
-    }*/
     //initialize control class and performance
     Controls ctrl(680,0.95);
     Performance perf;

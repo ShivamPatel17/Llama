@@ -32,12 +32,14 @@ void ProteusInterface::homepage(){
     LCD.DrawRectangle(0,82,180,40);
     LCD.DrawRectangle(0,123,180,40);
     LCD.DrawRectangle(0,164,180,40);
+    LCD.DrawRectangle(0,205,180,40);
 
     LCD.WriteAt("RPS",2,2);
     LCD.WriteAt("Turn left",2,42);
     LCD.WriteAt("Set Wrench Down",2,82);
     LCD.WriteAt("Turn right",2,123);
     LCD.WriteAt("Perf4",2,164);
+    LCD.WriteAt("Sweep",2,205);
 
     //dummys
     float x,y;
@@ -61,13 +63,16 @@ void ProteusInterface::homepage(){
                 ctrl.turnCrank(1);
             }
             if((x>0&&x<80)&&(y>80&&y<120)){
-                ctrl.setWrenchDegree(10,5);
+                ctrl.setWrenchDegree(5,5);
             }
             if((x>0&&x<80)&&(y>123&&y<164)){
                 ctrl.turnCrank(2);
             }
             if((x>0&&x<80)&&(y>164&&y<204)){
                 perf.test3();
+            }
+            if((x>0&&x<80)&&(y>205&&y<246)){
+                ctrl.sweep(3.0);
             }
 
         }
@@ -172,7 +177,7 @@ int ProteusInterface::configureDrive(){
                 Sleep(0.25);
             }
             if((x>200&&x<280)&&(y>60&&y<160)){
-                Sleep(0.5);
+                Sleep(0.4);
                 ctrl.driveDistance(10.0,35);
             }
 

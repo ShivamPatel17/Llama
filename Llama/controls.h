@@ -14,6 +14,7 @@ class Controls
         Controls(int, double);
         int drive(double, int);
         int driveDistance(double, int);
+        int driveDistanceUntilBump(double,int);
         int turn(float, int);
         int straightUntilWall(int);
         void setSuperConstant(int);
@@ -30,13 +31,19 @@ class Controls
         int stopMotors();
         void setWrenchDegree(int,int);
         int followLine(float);
+        int followWrenchLine(float);
+        float getCDS();
+        bool sweep(float);
+        void retry();
         //rps functions below
         void checkYPlus(float);
         void checkYMinus(float);
         void checkXPlus(float);
         void checkXMinus(float);
-        void checkHeading(float,float,float);
+        void checkHeading(float,float,float,int);
         void XYRPS(float,float, int);
+
+
 
     private:
 
