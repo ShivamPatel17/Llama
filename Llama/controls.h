@@ -33,7 +33,8 @@ class Controls
         int followLine(float);
         int followWrenchLine(float);
         float getCDS();
-        bool sweep(float);
+        bool sweep(float,int);
+        void masterStatus();
         void retry();
         //rps functions below
         void checkYPlus(float);

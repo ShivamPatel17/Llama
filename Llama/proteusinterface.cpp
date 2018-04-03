@@ -37,7 +37,7 @@ void ProteusInterface::homepage(){
     LCD.WriteAt("RPS",2,2);
     LCD.WriteAt("Turn left",2,42);
     LCD.WriteAt("Set Wrench Down",2,82);
-    LCD.WriteAt("Turn right",2,123);
+    LCD.WriteAt("MasterStatus",2,123);
     LCD.WriteAt("Perf4",2,164);
     LCD.WriteAt("Sweep",2,205);
 
@@ -61,18 +61,19 @@ void ProteusInterface::homepage(){
             }
             if((x>0&&x<80)&&(y>40&&y<80)){
                 ctrl.turnCrank(1);
+                 ctrl.turnCrank(2);
             }
             if((x>0&&x<80)&&(y>80&&y<120)){
                 ctrl.setWrenchDegree(5,5);
             }
             if((x>0&&x<80)&&(y>123&&y<164)){
-                ctrl.turnCrank(2);
+                ctrl.masterStatus();
             }
             if((x>0&&x<80)&&(y>164&&y<204)){
-                perf.test3();
+                perf.fastRun();
             }
             if((x>0&&x<80)&&(y>205&&y<246)){
-                ctrl.sweep(3.0);
+                ctrl.sweep(3.0,1);
             }
 
         }

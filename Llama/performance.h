@@ -11,6 +11,7 @@ public:
     void test3();
     void fuelCrank();
     void finalTest();
+    void fastRun();
 
 };
 
