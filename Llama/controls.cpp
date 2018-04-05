@@ -160,7 +160,6 @@ int Controls::driveDistance(double distance, int power){
     rightEncoder.ResetCounts();
     leftEncoder.ResetCounts();
 
-    Sleep(0.2);
     float t = TimeNow();
 
     if(distance>4.0){
@@ -260,7 +259,7 @@ int Controls::straightUntilWall(int motorPower){
     rightMotor.SetPercent(motorPower);
     float t = TimeNow();
     //go until both bumpers are pressed
-    while(leftBumper.Value()||rightBumper.Value()&&(TimeNow()-t<5.0)){}
+    while((leftBumper.Value()||rightBumper.Value())&&(TimeNow()-t<3.0)){}
 
     //stop
     rightMotor.Stop();
@@ -277,7 +276,7 @@ int Controls::straightUntilWall(int motorPower){
 void Controls::waitForCDS(int thres){
    float init = cds.Value();
    float t = TimeNow();
-   while(init-cds.Value()<thres && (TimeNow()-t<30)){
+   while((init-cds.Value()<thres && (TimeNow()-t<30))&&rightBumper.Value()){
 
    }
 }
@@ -333,14 +332,16 @@ int Controls::driveUntilLight(int motorPower){
 int Controls::controlPanel(int color){
     if(color==1){
         float t = TimeNow();
-        driveDistance(3.6,-35);
+        driveDistance(3.6,-40);
         Sleep(0.1);
-        turn(90,25);
+        turn(87,40);
         rightMotor.SetPercent(40);
         leftMotor.SetPercent(40);
-        while(!(RPS.IsDeadzoneActive()==2)||(TimeNow()-t<8.0)){}
+        //while(!(RPS.IsDeadzoneActive()==2)||(TimeNow()-t<8.0)){}
+        Sleep(0.55);
         rightMotor.Stop();
         leftMotor.Stop();
+        /*
         if(!RPS.IsDeadzoneActive()){
             driveDistance(6.0,-25);
             turn(-30,25);
@@ -353,17 +354,18 @@ int Controls::controlPanel(int color){
         while(!(RPS.IsDeadzoneActive()==2)){}
         rightMotor.Stop();
         leftMotor.Stop();
-        LCD.Clear(GREEN);
+        LCD.Clear(GREEN);*/
     }
     else if(color==-1){
         float t=TimeNow();
-        driveDistance(1.0,-25);
+        driveDistance(1.0,-40);
         Sleep(0.1);
-        turn(90,25);
+        turn(87,40);
         drive(4.0,35);
         rightMotor.SetPercent(40);
         leftMotor.SetPercent(40);
-        while(!(RPS.IsDeadzoneActive()==2)){}
+       // while(!(RPS.IsDeadzoneActive()==2)){}
+        Sleep(0.55);
         rightMotor.Stop();
         leftMotor.Stop();
         LCD.Clear(GREEN);
@@ -392,7 +394,9 @@ int Controls::initializeCrank(int direction){
  * retries the wrench pick up
  * *************************************/
 void Controls::retry(){
+    Sleep(1.0);
     if(wrenchBump.Value()){
+        driveDistance(3.0,-25);
         wrenchServo.SetDegree(5);
         sweep(2.7,1);
         followLine(2.7);
@@ -411,14 +415,14 @@ void Controls::retry(){
  * turns the fuel crank disk 180 degree in the given direction
  * ********************************************************/
 int Controls::turnCrank(int direction){
-    rightMotor.SetPercent(-35);
-    leftMotor.SetPercent(-35);
+    rightMotor.SetPercent(-40);
+    leftMotor.SetPercent(-40);
     if(direction==1){
 
         LCD.WriteLine(1);
         int degree = 0;
         fuelServo.SetDegree(degree);
-        Sleep(0.5);
+        Sleep(0.3);
         while(degree<179){
             degree++;
             fuelServo.SetDegree(degree);
@@ -429,7 +433,7 @@ int Controls::turnCrank(int direction){
         LCD.WriteLine(2);
         int degree = 180;
         fuelServo.SetDegree(degree);
-        Sleep(0.5);
+        Sleep(0.3);
         while(degree>1){
             degree--;
             fuelServo.SetDegree(degree);
@@ -462,6 +466,9 @@ void Controls::setWrenchDegree(int degree, int ms){
 }
 /********************************
  * supposed to find the line
+ *
+ * return true for right of line
+ * return false for left of line
  * ****************************/
 bool Controls::sweep(float optoValue, int code){
     LCD.WriteLine("sweeping");
@@ -469,16 +476,20 @@ bool Controls::sweep(float optoValue, int code){
     bool direction = false;
     bool lineFound = false;
 
+    if(opto.Value()>3.11){
+        return true;
+    }
+
     if(code==0){
         //time
         float q = TimeNow();
         float t;
         while(!lineFound&&(TimeNow()-q<6.4)){
             if(!direction){
-                rightMotor.SetPercent(20);
-                leftMotor.SetPercent(-20);
+                rightMotor.SetPercent(10);
+                leftMotor.SetPercent(-10);
                 t = TimeNow();
-                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<0.6)){}
+                while((opto.Value()<optoValue||opto.Value()>3.2) && (TimeNow()-t<2.0)){}
 
                 rightMotor.Stop();
                 leftMotor.Stop();
@@ -488,22 +499,22 @@ bool Controls::sweep(float optoValue, int code){
                 direction = true;
             }
             if(direction==1){
-                rightMotor.SetPercent(-20);
-                leftMotor.SetPercent(20);
+                rightMotor.SetPercent(-10);
+                leftMotor.SetPercent(10);
                 t=TimeNow();
-                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<1.2)){}
+                while((opto.Value()<optoValue||opto.Value()>3.2) && (TimeNow()-t<2.0)){}
                 rightMotor.Stop();
                 leftMotor.Stop();
                 if(opto.Value()>optoValue){
-                    return true;
+                    return false;
                 }
                 direction = false;
             }
             if(!direction){
-                rightMotor.SetPercent(20);
-                leftMotor.SetPercent(-20);
+                rightMotor.SetPercent(17);
+                leftMotor.SetPercent(-17);
                 t=TimeNow();
-                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<0.6)){}
+                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<1.0)){}
                 rightMotor.Stop();
                 leftMotor.Stop();
                 if(opto.Value()>optoValue){
@@ -511,7 +522,7 @@ bool Controls::sweep(float optoValue, int code){
                 }
                 direction = false;
             }
-            driveDistance(1.0,15);
+            driveDistance(1.7,15);
          }
         LCD.WriteLine("Done sweeping");
      }
@@ -521,10 +532,10 @@ bool Controls::sweep(float optoValue, int code){
         float t;
         while(!lineFound&&(TimeNow()-q<6.4)){
             if(!direction){
-                rightMotor.SetPercent(-20);
-                leftMotor.SetPercent(20);
+                rightMotor.SetPercent(20);
+                leftMotor.SetPercent(-20);
                 t = TimeNow();
-                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<0.6)){}
+                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<1.0)){}
 
                 rightMotor.Stop();
                 leftMotor.Stop();
@@ -534,10 +545,10 @@ bool Controls::sweep(float optoValue, int code){
                 direction = true;
             }
             if(direction){
-                rightMotor.SetPercent(20);
-                leftMotor.SetPercent(-20);
+                rightMotor.SetPercent(-20);
+                leftMotor.SetPercent(20);
                 t=TimeNow();
-                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<1.2)){}
+                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<2.0)){}
                 rightMotor.Stop();
                 leftMotor.Stop();
                 if(opto.Value()>optoValue){
@@ -546,10 +557,10 @@ bool Controls::sweep(float optoValue, int code){
                 direction = false;
             }
             if(!direction){
-                rightMotor.SetPercent(-20);
-                leftMotor.SetPercent(20);
+                rightMotor.SetPercent(20);
+                leftMotor.SetPercent(-20);
                 t=TimeNow();
-                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<0.6)){}
+                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<1.0)){}
                 rightMotor.Stop();
                 leftMotor.Stop();
                 if(opto.Value()>optoValue){
@@ -561,7 +572,53 @@ bool Controls::sweep(float optoValue, int code){
          }
         LCD.WriteLine("Done sweeping");
      }
+    //
+    if(code==2){
+        //time
+        float q = TimeNow();
+        float t;
+        while(!lineFound&&(TimeNow()-q<6.4)){
+            if(!direction){
+                rightMotor.SetPercent(20);
+                leftMotor.SetPercent(-20);
+                t = TimeNow();
+                while((opto.Value()<optoValue||opto.Value()>3.52) && (TimeNow()-t<3.0)){}
 
+                rightMotor.Stop();
+                leftMotor.Stop();
+                if(opto.Value()>optoValue){
+                    return true;
+                }
+                direction = true;
+            }
+
+         }
+        LCD.WriteLine("Done sweeping");
+     }
+
+}
+
+int Controls::swerve(){
+    driveDistance(9.2,35);
+    int counts = (int)(7.1*318/1.5/3.141592);
+    leftMotor.SetPercent(60);
+    rightMotor.SetPercent(10);
+    rightEncoder.ResetCounts();
+    leftEncoder.ResetCounts();
+    while(rightEncoder.Counts()+leftEncoder.Counts()<counts){}
+    leftMotor.Stop();
+    rightMotor.Stop();
+}
+
+int Controls::swerve2(){
+    int counts = (int)(20*318/1.5/3.141592);
+    leftMotor.SetPercent(100);
+    rightMotor.SetPercent(0);
+    rightEncoder.ResetCounts();
+    leftEncoder.ResetCounts();
+    while(rightEncoder.Counts()+leftEncoder.Counts()<counts){}
+    leftMotor.Stop();
+    rightMotor.Stop();
 }
 
 /************************
@@ -625,13 +682,20 @@ int Controls::followLine(float time){
     stopMotors();
 }
 /************************
- * Assume we are on the right of a line and then follow
+ * true for right of line and false for left of line
  * ***********************/
-int Controls::followWrenchLine(float time){
+int Controls::followReverseWrenchLine(float time, bool ROL){
     float ON = 3.0;
-    float R= 2.66;
-    float L = 3.1;
-    bool right=true;
+    float R;
+    float L;
+    if(ROL){
+        R= 2.66;
+        L = 3.1;
+    }else{
+        R = 3.1;
+        L = 2.66;
+    }
+    bool right=ROL;
     bool onLine = true;
 
     //time
@@ -639,16 +703,17 @@ int Controls::followWrenchLine(float time){
     while(TimeNow()-t<time){
         if(right&&!onLine){
             LCD.Clear(GREEN);
-            rightMotor.SetPercent(15);
-            leftMotor.SetPercent(10);
+            float mp = (opto.Value()-2)/(ON-2);
+            rightMotor.SetPercent(-15*mp);
+            leftMotor.SetPercent(-15);
             while(opto.Value()<ON && (TimeNow()-t<time)){}
             onLine = true;
             right = false;
         }
         if(onLine){
             LCD.Clear(RED);
-            rightMotor.SetPercent(20);
-            leftMotor.SetPercent(20);
+            rightMotor.SetPercent(-15);
+            leftMotor.SetPercent(-15);
             while((opto.Value()<R&&opto.Value()<L)&& (TimeNow()-t<time)){}
             if(opto.Value()>L){
                 right = false;
@@ -660,7 +725,70 @@ int Controls::followWrenchLine(float time){
         }
         if(!onLine&&!right){
             LCD.Clear(BLUE);
+            float mp = (opto.Value()-2)/(ON-2);
+            leftMotor.SetPercent(-15);
+            rightMotor.SetPercent(-15*mp);
+            while(opto.Value()>ON && (TimeNow()-t<time)){}
+            onLine = true;
+            right = true;
+        }
+        if(!right&&onLine){
+            LCD.Clear(RED);
+            rightMotor.SetPercent(15);
             leftMotor.SetPercent(15);
+            while((opto.Value()<R&&opto.Value()<L) && (TimeNow()-t<time)){}
+            if(opto.Value()>L){
+                right = false;
+            }
+            if(opto.Value()<R){
+                right = true;
+            }
+            onLine = false;
+        }
+
+
+    }
+    stopMotors();
+}
+/************************
+ * Assume we are on the right of a line and then follow
+ * ***********************/
+int Controls::followWrenchLine(float time, bool BOL){
+    float ON = 2.9;
+    float R= 2.66;
+    float L = 3.1;
+    bool right=true;
+    bool onLine = true;
+
+    //time
+    float t = TimeNow();
+    while(TimeNow()-t<time){
+        if(right&&!onLine){
+            LCD.Clear(GREEN);
+            float mp = opto.Value()/ON;
+            rightMotor.SetPercent(15*mp);
+            leftMotor.SetPercent(10);
+            while(opto.Value()<ON && (TimeNow()-t<time)){}
+            onLine = true;
+            right = false;
+        }
+        if(onLine){
+            LCD.Clear(RED);
+            rightMotor.SetPercent(25);
+            leftMotor.SetPercent(25);
+            while((opto.Value()<R&&opto.Value()<L)&& (TimeNow()-t<time)){}
+            if(opto.Value()>L){
+                right = false;
+            }
+            if(opto.Value()<R){
+                right = true;
+            }
+            onLine = false;
+        }
+        if(!onLine&&!right){
+            LCD.Clear(BLUE);
+            float mp = opto.Value()/ON;
+            leftMotor.SetPercent(15*mp);
             rightMotor.SetPercent(10);
             while(opto.Value()>ON && (TimeNow()-t<time)){}
             onLine = true;
@@ -668,8 +796,8 @@ int Controls::followWrenchLine(float time){
         }
         if(!right&&onLine){
             LCD.Clear(RED);
-            rightMotor.SetPercent(13);
-            leftMotor.SetPercent(13);
+            rightMotor.SetPercent(25);
+            leftMotor.SetPercent(25);
             while((opto.Value()<R&&opto.Value()<L) && (TimeNow()-t<time)){}
             if(opto.Value()>L){
                 right = false;
@@ -700,6 +828,8 @@ void Controls::masterStatus(){
         LCD.WriteLine(opto.Value());
         LCD.Write("CDS: ");
         LCD.WriteLine(cds.Value());
+        LCD.Write("wrench bump: ");
+        LCD.WriteLine(wrenchBump.Value());
         Sleep(0.7);
      }
 }

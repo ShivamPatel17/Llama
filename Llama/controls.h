@@ -20,6 +20,8 @@ class Controls
         void setSuperConstant(int);
         int getSuperConstant();
         void setDistanceConstant(double);
+        int swerve();
+        int swerve2();
         double getDistanceConstant();
         void waitForCDS(int);
         int cdsColor();
@@ -31,7 +33,8 @@ class Controls
         int stopMotors();
         void setWrenchDegree(int,int);
         int followLine(float);
-        int followWrenchLine(float);
+        int followWrenchLine(float, bool);
+        int followReverseWrenchLine(float, bool);
         float getCDS();
         bool sweep(float,int);
         void masterStatus();
