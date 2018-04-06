@@ -44,27 +44,27 @@ void Performance::fastRun(){
 
     ctrl.setWrenchDegree(5,2);
     ctrl.sweep(2.7,0);
-    ctrl.followLine(1.8);
+    ctrl.followLine(2.0);
 
 
 
     //PICK UP WRENCH
     ctrl.setWrenchDegree(105,5);
 
-    //ctrl.retry();
+    ctrl.retry();
 
     ctrl.driveDistance(2.8,-40);
 
     ctrl.turn(-40,40);
 
-    ctrl.driveDistance(9.0,40);
+    ctrl.driveDistance(9.5,40);
 
     ctrl.turn(-40,40);
 
     ctrl.straightUntilWall(40);
 
     //backup a bit
-    ctrl.driveDistance(2.3,-35);
+    ctrl.driveDistance(2.5,-36);
 
     //turn to flick swit
     ctrl.turn(-32,40);
@@ -81,7 +81,7 @@ void Performance::fastRun(){
     ctrl.turn(5,25);
 
     //back up like 14 inches
-    ctrl.driveDistance(10.5,-35);
+    ctrl.driveDistance(10.8,-35);
 
     Sleep(0.1);
     LCD.Clear(WHITE);
@@ -102,11 +102,11 @@ void Performance::fastRun(){
         LCD.Clear(RED);
     }
     //ctrl.checkHeading(0,2,1,30);
-    ctrl.straightUntilWall(45);
-    ctrl.driveDistance(5.0,-35);
-    ctrl.turn(-40,35);
-    ctrl.driveDistance(5.0,35);
-    ctrl.turn(35,35);
+    //ctrl.straightUntilWall(45);
+    //ctrl.driveDistance(5.0,-35);
+    ctrl.turn(-21,40);
+    ctrl.driveDistance(4.0,35);
+    ctrl.turn(24,40);
     ctrl.straightUntilWall(45);
 
     ctrl.controlPanel(color);
@@ -116,39 +116,41 @@ void Performance::fastRun(){
      * *******************************/
 
     ctrl.driveDistance(1.0,-40);
-    ctrl.turn(-90,25);
-    ctrl.straightUntilWall(45);
+    ctrl.turn(-86,40);
+    ctrl.straightUntilWall(30);
     ctrl.driveDistance(0.15,-25);
-    ctrl.turn(-76,25);
+    ctrl.turn(-74,25);
 
     ctrl.driveDistance(22.0,40);
     Sleep(0.2);
-    ctrl.turn(-19,35);
+    ctrl.turn(-15,35);
     ctrl.initializeCrank(RPS.FuelType());
 
     /************************
      * straight away and wrench deposit
      * **************************/
-    ctrl.driveDistance(19.0,60);
+    ctrl.driveDistance(17.8,60);
 
     bool ROL= ctrl.sweep(3.0,1);
     ctrl.setWrenchDegree(45,2);
-    ctrl.followWrenchLine(2.0, ROL);
-    ctrl.drive(1.6,40);
+    ctrl.followWrenchLine(2.2, ROL);
+    ctrl.drive(1.5,30);
     ctrl.setWrenchDegree(5,5);
-    ctrl.driveDistance(4.0,-45);
+    ctrl.driveDistance(5.0,-45);
     ctrl.setWrenchDegree(140,0);
     ctrl.followWrenchLine(1.5,true);
-    ctrl.drive(1.6,50);
+    ctrl.drive(1.2,60);
 
 
     /***********************************
      * after the wrench has been deposited TURN CRANK
      * ************************************/
-    ctrl.driveDistance(8.84, -25);
-    ctrl.turn(-90.4 ,25);
+    ctrl.driveDistance(3.0,-20);
+    ctrl.turn(-5,20);
+    ctrl.driveDistance(6.0,-20);
+    ctrl.turn(-85,20);
     Sleep(0.1);
-    ctrl.driveDistance(12.0,-30);
+    ctrl.driveDistance(13.0,-30);
     ctrl.turnCrank(RPS.FuelType());
     ctrl.stopMotors();
     ctrl.driveDistance(0.22,15);
@@ -157,8 +159,8 @@ void Performance::fastRun(){
     /******************************8
      * back down the straighaway
      * **************************/
-    ctrl.turn(-88,40);
-    ctrl.driveDistance(14.0,45);
+    ctrl.turn(-86.2,40);
+    ctrl.driveDistance(14.9,45);
     ctrl.turn(48,40);
     ctrl.driveDistance(16.0,40);
     ctrl.swerve2();

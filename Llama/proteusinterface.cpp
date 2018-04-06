@@ -60,7 +60,7 @@ void ProteusInterface::homepage(){
                 }
             }
             if((x>0&&x<80)&&(y>40&&y<80)){
-                ctrl.swerve2();
+                ctrl.swerve();
             }
             if((x>0&&x<80)&&(y>80&&y<120)){
                 ctrl.setWrenchDegree(5,5);
